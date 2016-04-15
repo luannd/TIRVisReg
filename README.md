@@ -7,8 +7,13 @@ Citing IRVisReg
 If you find IRVisReg useful in your research, please consider citing:
 
 @inproceedings{luannguyen16CVPRW,
-    Author = {Girshick, Ross and Donahue, Jeff and Darrell, Trevor and Malik, Jitendra},
+    Author = {},
     Title = {Non-planar Infrared-Visible Registration for Uncalibrated Stereo Pairs},
     Booktitle = {Computer Vision and Pattern Recognition Workshops},
     Year = {2016}
 }
+
+Installation
+
+Prerequisites
+1. OpenCV 3.0
