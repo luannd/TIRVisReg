@@ -6,11 +6,12 @@ Created by Dinh-Luan Nguyen at University of Science, Vietnam National Universit
 
 If you find IRVisReg useful in your research, please consider citing:
 
-@inproceedings{luannguyen16CVPRW,
-    Author = {Dinh-Luan, Nguyen and Pierre-Luc, St-Charles and Guillaume-Alexandre, Bilodeau},
-    Title = {Non-planar Infrared-Visible Registration for Uncalibrated Stereo Pairs},
-    Booktitle = {Computer Vision and Pattern Recognition Workshops},
-    Year = {2016}
+@InProceedings{Nguyen_2016_CVPR_Workshops,
+author = {Nguyen, Dinh-Luan and St-Charles, Pierre-Luc and Bilodeau, Guillaume-Alexandre},
+title = {Non-Planar Infrared-Visible Registration for Uncalibrated Stereo Pairs},
+booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
+month = {June},
+year = {2016}
 }
 
 #Installation
