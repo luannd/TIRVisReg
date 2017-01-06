@@ -46,7 +46,7 @@ void MultimodalVideoRegistrAlg::ResetInternalState() {
     m_oCurrTransMat = cv::Mat();
     m_oCurrTransMat_inv = cv::Mat();
 
-	//New one
+	//Check if it is a new one
 	m_bIsTheSame = true;
 	m_iFrameCountDown = 10;
 
@@ -57,23 +57,17 @@ void MultimodalVideoRegistrAlg::ResetInternalState() {
 	m_oBestChooseTransMat_inv = cv::Mat::eye(3, 3, CV_64FC1);
 
 	iCountFrame = -1;
-
 	iIndexCurrentFrame = 0;
-
 	m_isPreProcessed = false;
-
-	//m_oBestFundamentalMatrix = cv::Mat::eye(3, 3, CV_64FC1);
+	isRunSecond = false;
+	
 	bestTransFundMatrix = cv::Mat::eye(3, 3, CV_64FC1);
 	fCurFundamentalMatrixOverlapError_Best = 1.0;
 	isUsingFundametalMatrix = false;
 
 	minisBad = minisBadFundamental = 100;
-
 	m_ratioH1H2 = 1;
-
 	m_ErrorH1H2Cur = m_ErrorH1H2Best = 1;
-
-	isRunSecond = false;
 }
 
 
@@ -122,9 +116,6 @@ void MultimodalVideoRegistrAlg::ProcessForeground(cv::Mat& oForeground_ToTransfo
 	//imshow("oForeground_ToTransform", oForeground_ToTransform);
 
     if(!m_vvoBlobContours_ToTransform.empty() && !m_vvoBlobContours.empty()) {
-		
-
-
 		//for (int i = 0; i<m_vvoBlobContours.size(); i++)
 		//	cout << "Visual= " << m_vvoBlobContours[i].size() << " ";
 		//cout << endl;
@@ -132,13 +123,11 @@ void MultimodalVideoRegistrAlg::ProcessForeground(cv::Mat& oForeground_ToTransfo
 		//	cout << "Thermal= " << m_vvoBlobContours_ToTransform[i].size() << " ";
 		//cout << endl;
 
-		//My skills
+		//Reduce size
 		reduceSize(m_vvoBlobContours_ToTransform);
 		reduceSize(m_vvoBlobContours);
 		m_iFrameCountDown = m_iFrameCountDown > 0 ? m_iFrameCountDown-1 : 0;
 
-
-		//cout << m_iFrameCountDown << " " << m_bIsTheSame << endl;
 		if (m_iFrameCountDown == 0)
 			m_bIsTheSame = true;
 
@@ -180,7 +169,7 @@ void MultimodalVideoRegistrAlg::ProcessForeground(cv::Mat& oForeground_ToTransfo
 				//Compute distance between 2 contours
 				float fCurrBlobSimilarityScore = m_pShapeDistExtr->computeDistance(m_vvoBlobContours_ToTransform[n], m_vvoBlobContours[m]);
 
-				//find the min distance
+				//Find the min distance
 				if (fCurrBlobSimilarityScore<fMinBlobSimilarityScore) {
 					fMinBlobSimilarityScore = fCurrBlobSimilarityScore;
 					voCurrBlobMatches = m_pShapeDistExtr->getLatestMatches();
@@ -195,20 +184,18 @@ void MultimodalVideoRegistrAlg::ProcessForeground(cv::Mat& oForeground_ToTransfo
 			else
 			// done
 			for(m=0; m<m_vvoBlobContours.size(); ++m) {
-				//std::cout << m_bIsTheSame<<" "<<m_vArrayMatchContours.size() << " " << m_vvoBlobContours_ToTransform.size() << std::endl;
-				//ok
+				
 				if(m_vvoBlobContours_ToTransform[n].size()>MIN_TPS_KEYPOINTS_COUNT && m_vvoBlobContours[m].size()>MIN_TPS_KEYPOINTS_COUNT)
 					m_pShapeDistExtr->setTransformAlgorithm(m_pShapeTransf_TPS);
 				else if(m_vvoBlobContours_ToTransform[n].size()>MIN_KEYPOINTS_COUNT && m_vvoBlobContours[m].size()>MIN_KEYPOINTS_COUNT)
 					m_pShapeDistExtr->setTransformAlgorithm(m_pShapeTransf_Aff);
 				else
 					continue;
-				//done
 
 				//Compute distance between 2 contours
 				float fCurrBlobSimilarityScore = m_pShapeDistExtr->computeDistance(m_vvoBlobContours_ToTransform[n], m_vvoBlobContours[m]);
 
-				//find the min distance
+				//Find the min distance
 				if(fCurrBlobSimilarityScore<fMinBlobSimilarityScore) {
 					fMinBlobSimilarityScore = fCurrBlobSimilarityScore;
 					voCurrBlobMatches = m_pShapeDistExtr->getLatestMatches();
@@ -221,7 +208,7 @@ void MultimodalVideoRegistrAlg::ProcessForeground(cv::Mat& oForeground_ToTransfo
 					m_vArrayMatchContours[n] = m;
 				}
 			}
-			//save nearest disparity contours
+			//Save the nearest disparity contours
 			if (fMinBlobSimilarityScore<MIN_SIMILARITY_SCORE && !voBestBlobMatches.empty()) {
 				vvoFiltBlobContours_ToTransform.push_back(m_vvoBlobContours_ToTransform[n]);
 				vvoFiltBlobContours.push_back(m_vvoBlobContours[nBestContourIdx]);
@@ -261,7 +248,7 @@ void MultimodalVideoRegistrAlg::ProcessForeground(cv::Mat& oForeground_ToTransfo
                 m_vvoRecentFiltKeyPoints_ToTransform[m_nCurrFrameStackIdx].resize(nCurrKeyPointsCount);
                 m_vvoRecentFiltKeyPoints[m_nCurrFrameStackIdx].resize(nCurrKeyPointsCount);
 
-				//Nhet tat ca cac contour vao cung 1 vector 2 chieu. m_nCurrFrameStackIdx la the hien dang o frame thu may trong video
+		//Put all contours into 2D vector. m_nCurrFrameStackIdx shows the current frame in video
                 for(size_t n=0,nKeyPointIdx=0; n<vvoFiltBlobContours_ToTransform.size(); ++n) {
                     for(size_t m=0; m<vvoFiltBlobKeyPointsMatches[n].size(); ++m) {
                         m_vvoRecentFiltKeyPoints_ToTransform[m_nCurrFrameStackIdx][nKeyPointIdx] = vvoFiltBlobContours_ToTransform[n][vvoFiltBlobKeyPointsMatches[n][m].queryIdx];
@@ -270,10 +257,10 @@ void MultimodalVideoRegistrAlg::ProcessForeground(cv::Mat& oForeground_ToTransfo
                     }
                 }
 
-				//circle??
+				
                 const size_t nCurrModelCoordsCount = (m_nCurrModelLastCoordIdx<m_nCurrModelNextCoordIdx)?(m_nCurrModelNextCoordIdx-m_nCurrModelLastCoordIdx):(m_vfModelCoords_ToTransform.size()-m_nCurrModelLastCoordIdx+m_nCurrModelNextCoordIdx);
 
-				//guarantee not over flow?
+		//Check if overflow
                 if(nCurrModelCoordsCount+nCurrKeyPointsCount*2>m_vfModelCoords_ToTransform.size()) {
                     const size_t nOldMaxModelCoordsCount = m_vfModelCoords_ToTransform.size();
                     const size_t nNewMaxModelCoordsCount = (nOldMaxModelCoordsCount+nCurrKeyPointsCount*2)*2;
@@ -317,7 +304,6 @@ void MultimodalVideoRegistrAlg::ProcessForeground(cv::Mat& oForeground_ToTransfo
                     }
                     
 					//Compute outlier reservoir
-					//what???
 					cv::Mat oPersistenceMap(1,m_nCurrModelNextCoordIdx/2,CV_32SC1,pnPersistence);
                     double dMinPersistenceVal,dMaxPersistenceVal;
 
@@ -366,10 +352,10 @@ void MultimodalVideoRegistrAlg::ProcessForeground(cv::Mat& oForeground_ToTransfo
 					cv::Mat oOutliersMask;
                     m_oCurrTransMat_inv = cv::findHomography(m_oKeyPoints_ToTransform,m_oKeyPoints,oOutliersMask,cv::RANSAC);
 				
-					//Tinh Homography
+					//Homography
 					CalculateHomography(oForeground_ToTransform, oForeground, m_oCurrTransMat_inv);
 
-					//Tinh Fundamental
+					//Fundamental
 					if (isCalculatingFundamental == true)
 						drawEpipolarLines(oForeground_ToTransform, oForeground, m_oCurrTransMat_inv);
 					
@@ -397,7 +383,7 @@ void MultimodalVideoRegistrAlg::ProcessForeground(cv::Mat& oForeground_ToTransfo
         }
     }
 
-	//Ket thuc xu li cai j do, cai nay la sau if findcontours
+	
 
     if(!m_oLatestTransMat.empty()) {
         const cv::Size oTransformedImageSize = oForeground.size();
@@ -406,7 +392,7 @@ void MultimodalVideoRegistrAlg::ProcessForeground(cv::Mat& oForeground_ToTransfo
 
 
 
-		//Tien hanh transform dua vao ma tran
+		//Transform and put into matrix
         cv::warpPerspective(oForeground_ToTransform,m_oLatestTransformedForeground,m_oLatestTransMat,oTransformedImageSize,cv::INTER_NEAREST|cv::WARP_INVERSE_MAP,cv::BORDER_CONSTANT);
 		cv::warpPerspective(oForeground_ToTransform, m_oBestTransformedForeground, m_oBestTransMat, oTransformedImageSize, cv::INTER_NEAREST | cv::WARP_INVERSE_MAP, cv::BORDER_CONSTANT);
 
@@ -417,7 +403,6 @@ void MultimodalVideoRegistrAlg::ProcessForeground(cv::Mat& oForeground_ToTransfo
         const float fLatestForegroundOverlapError = DatasetUtils::CalcForegroundOverlapError(oForeground,m_oLatestTransformedForeground);
         const float fBestForegroundOverlapError = DatasetUtils::CalcForegroundOverlapError(oForeground,m_oBestTransformedForeground);
 
-		//CHU Y CHO NAY!!
 
 		//Homography smoothing
         if(fLatestForegroundOverlapError<fBestForegroundOverlapError &&
@@ -434,7 +419,7 @@ void MultimodalVideoRegistrAlg::ProcessForeground(cv::Mat& oForeground_ToTransfo
 
         }
 
-		//compare
+		//Compare process
 		compareFundametalAndHomography(isCalculatingFundamental,oForeground_ToTransform, oForeground);
 
 		if (isUsingFundametalMatrix == false)
@@ -490,7 +475,7 @@ void MultimodalVideoRegistrAlg::drawEpipolarLines(cv::Mat& oForeground_ToTransfo
 		H2 = H2_Best.clone();
 	}
 
-	//Visualize bien doi cua H1, H2
+	//Visualize the change of H1, H2
 	Mat tmp1 = oForeground_ToTransform.clone();
 	cv::warpPerspective(oForeground_ToTransform, tmp1, H1, oForeground_ToTransform.size(), cv::INTER_NEAREST, cv::BORDER_CONSTANT);
 
@@ -499,13 +484,10 @@ void MultimodalVideoRegistrAlg::drawEpipolarLines(cv::Mat& oForeground_ToTransfo
 
 	float fCurFundamentalMatrixOverlapError = DatasetUtils::CalcForegroundOverlapError(tmp2, tmp1);
 
-	//imshow("Bien doi cua oForeground_ToTransform", tmp1);
-	//imshow("Bien doi cua oForeground", tmp2);
-
 	if (m_oBestFundamentalMatrix.cols == 0)
 		m_oBestFundamentalMatrix = Luan_FundamentalMat.clone();
 
-	//Tinh cai m_oBestFundamentalMatrix
+	//Calculate m_oBestFundamentalMatrix
 	cv::stereoRectifyUncalibrated(m_oKeyPoints_ToTransform, m_oKeyPoints,
 		m_oBestFundamentalMatrix, oForeground_ToTransform.size(), H1_Best, H2_Best);
 
@@ -528,13 +510,10 @@ void MultimodalVideoRegistrAlg::drawEpipolarLines(cv::Mat& oForeground_ToTransfo
 	}
 
 	
-	//imshow("Bien doi cua oForeground_ToTransform_Best", tmp1_Best);
-	//imshow("Bien doi cua oForeground_Best", tmp2_Best);
-
 	Mat luan_tmp1_Best = tmp1_Best.clone();
 	Mat luan_tmp2_Best = tmp2_Best.clone();
 
-	//Moi them de tinh shape =))
+	//Calculate shape
 	cv::Ptr<cv::ShapeContextDistanceExtractor> ShapeDistExtrH1H2 = cv::createShapeContextDistanceExtractor(15, 5, 0.1f, 4.0f);
 	std::vector<std::vector<cv::Point> > contourH1;
 	std::vector<std::vector<cv::Point> > contourH2;
@@ -549,18 +528,15 @@ void MultimodalVideoRegistrAlg::drawEpipolarLines(cv::Mat& oForeground_ToTransfo
 
 	if (!contourH1.empty() && !contourH2.empty()) {
 
-		//cout << "contour = " << contourH1.size() << " " << contourH2.size() << endl;
 		for (size_t n = 0; n<contourH1.size(); ++n) {
 			float fMinBlobSimilarityScore = FLT_MAX;
 			std::vector<cv::DMatch> voBestBlobMatches;
 			size_t nBestContourIdx = 0;
 
-			//Moi them
 			if (contourH1[n].size() < 3)
 				continue;
 
 			for (size_t m = 0; m<contourH2.size(); ++m) {
-				//Moi them
 				if (contourH2[m].size() < 3)
 					continue;
 
@@ -590,7 +566,7 @@ void MultimodalVideoRegistrAlg::drawEpipolarLines(cv::Mat& oForeground_ToTransfo
 			}
 		}
 
-		//Tinh gia tri translate
+		//Translation value
 		vTransValue.resize(vvoFiltBlobKeyPointsMatchesH1H2.size());
 		for (int i = 0; i < vTransValue.size(); i++){
 			int idxX = 0;
@@ -601,8 +577,6 @@ void MultimodalVideoRegistrAlg::drawEpipolarLines(cv::Mat& oForeground_ToTransfo
 					idxX = j;
 				}
 			}
-
-			//vTransValue[i] = vvoFiltBlobContoursH1[i][vvoFiltBlobKeyPointsMatchesH1H2[i][idxX].queryIdx].x - vvoFiltBlobContoursH2[i][vvoFiltBlobKeyPointsMatchesH1H2[i][idxX].trainIdx].x;
 
 			int tmpDis = 0;
 			for (int j = 0; j < vvoFiltBlobKeyPointsMatchesH1H2[i].size(); j++){
@@ -617,14 +591,9 @@ void MultimodalVideoRegistrAlg::drawEpipolarLines(cv::Mat& oForeground_ToTransfo
 		}
 
 		//cout << " vTransValue.size()=" << vTransValue.size() << " ";
-		//Cai final nay chi thich hop cho planar
+		//Suitable for Planar
 		finalTransValue = vTransValue.size()>0 ? finalTransValue / vTransValue.size() : finalTransValue;
 
-		//cout << "Match: ===== " << vvoFiltBlobKeyPointsMatchesH1H2.size() << endl;
-		//for (int i = 0; i < vvoFiltBlobKeyPointsMatchesH1H2.size(); i++)
-		//cout << ShapeDistExtrH1H2->computeDistance(vvoFiltBlobContoursH1[i], vvoFiltBlobContoursH2[i])<<" ";
-
-		//cout << " ok" << endl;
 
 	}
 
@@ -637,19 +606,8 @@ void MultimodalVideoRegistrAlg::drawEpipolarLines(cv::Mat& oForeground_ToTransfo
 		
 	Mat translateH1toH2(oForeground_ToTransform.size() * 3, oForeground_ToTransform.type());
 	Mat tamH1toH2 = luan_tmp1_Best.clone();
-
-	//Da chuyen vo trong ham
-	//cv::warpPerspective(oForeground_ToTransform, translateH1toH2, H1_Best, oForeground_ToTransform.size() * 3, cv::INTER_NEAREST, cv::BORDER_CONSTANT);
-	//cv::warpPerspective(translateH1toH2, translateH1toH2, bestTransTMatrix, oForeground_ToTransform.size() * 3, cv::INTER_NEAREST, cv::BORDER_CONSTANT);
-	//cv::warpPerspective(translateH1toH2, translateH1toH2, H2_Best.inv(), oForeground_ToTransform.size(), cv::INTER_NEAREST, cv::BORDER_CONSTANT);
-	
 	
 	translateH1toH2 = registrationUsingFundamentalMatrix(oForeground_ToTransform);
-
-	//imshow("Good", translateH1toH2 / 2 + oForeground / 2);
-	
-	
-	
 	cv::warpPerspective(oForeground_ToTransform, tamH1toH2, H1_Best, oForeground_ToTransform.size(), cv::INTER_NEAREST, cv::BORDER_CONSTANT);
 	
 	
@@ -668,7 +626,7 @@ void MultimodalVideoRegistrAlg::drawEpipolarLines(cv::Mat& oForeground_ToTransfo
 		imshow("Registration result", outTam / 2 + oForeground / 2);
 	}
 	
-	//Bo comment nay
+	
 	//Mat translateH1toH2 = oForeground_ToTransform.clone();
 	//cv::warpPerspective(luan_tmp1_Best, translateH1toH2, bestTransTMatrix, oForeground_ToTransform.size(), cv::INTER_NEAREST, cv::BORDER_CONSTANT);
 
@@ -759,8 +717,8 @@ void MultimodalVideoRegistrAlg::setTransMat(const MultimodalVideoRegistrAlg& oAl
 bool myfunction(vector<Point> i, vector<Point> j) { return (i.size()>j.size()); }
 
 Mat MultimodalVideoRegistrAlg::registrationBlobs(cv::Mat inputMat, cv::Mat refMat, std::vector<std::vector<cv::Point> > listContour, std::vector<int> vValueTrans){
-	//Input la anh da rectify
-	//Output la anh truoc khi nhan H2
+	//Input is rectified image
+	//Output is the image before applying H2
 	std::vector < std::vector<cv::Point2i > > blobs;
 	cv::Mat input_binary;
 	cv::Mat outputMat = Mat::zeros(inputMat.size(), inputMat.type());
@@ -795,7 +753,7 @@ Mat MultimodalVideoRegistrAlg::registrationBlobs(cv::Mat inputMat, cv::Mat refMa
 					break;
 			}
 			if (n > listContour[m].size()/2){
-				//cout << "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa " << blobs[i].size()<<endl;
+				//cout << "Oh Dear! " << blobs[i].size()<<endl;
 				break;
 			}
 				
@@ -834,7 +792,6 @@ Mat MultimodalVideoRegistrAlg::registrationBlobs(cv::Mat inputMat, cv::Mat refMa
 		pointRight = prevRef;
 		prevRef = 1;
 		int disRight = vValueTrans[m] + t;
-		//cout << "dis = " << vValueTrans[m] + t << " ";
 		t = 0;
 		
 		while (1){
@@ -963,7 +920,7 @@ void MultimodalVideoRegistrAlg::CalculateHomography(const cv::Mat& oForeground_T
 	if (fLatestForegroundOverlapError < m_curOverlapError){
 		m_curOverlapError = fLatestForegroundOverlapError;
 		
-		//Cai nay quyet dinh cao hay thap ne
+		//Importance
 		//m_oBestTransMat = m_oCurrTransMat.clone();
 		//m_oBestTransMat_inv = m_oCurrTransMat_inv.clone();
 		m_oLatestTransMat = m_oCurrTransMat.clone();
@@ -973,12 +930,12 @@ void MultimodalVideoRegistrAlg::CalculateHomography(const cv::Mat& oForeground_T
 }
 
 void MultimodalVideoRegistrAlg::compareFundametalAndHomography(bool isCalculatingFundamental, cv::Mat& oForeground_ToTransform, cv::Mat& oForeground){
-	//cach chon cac frame reference de kiem tra xem matrix moi co tot hon k
+	//Check if frame reference is better?
 	if (iCountFrame < 55)
 		iCountFrame++;
 
 	if (m_queueFrames.size() >= iCountFrame && iCountFrame > 3){
-		float isBad = 0, isBadFundamental = 0, isBadChooseHomo = 0; //TICH LUY SAI SO KHI BIEN DOI, XEM THU MATRIX HIEN TAI CO TOT HON SO VOI TRC K
+		float isBad = 0, isBadFundamental = 0, isBadChooseHomo = 0; 
 		int iCount = m_queueFrames.size();
 		queue<float> queError, queErrorFundamental;
 		while (iCount-- > 0){
@@ -1007,30 +964,26 @@ void MultimodalVideoRegistrAlg::compareFundametalAndHomography(bool isCalculatin
 
 				//isBadFundamental += (tmpForegroundOverlapErrorFundamental - tmpStruct.second);
 				isBadFundamental += tmpForegroundOverlapErrorFundamental;
-
-				//cout << "Error=" << tmpForegroundOverlapError<<" ErrorFundamental=" << tmpForegroundOverlapErrorFundamental << "tmpStruct.second=" << tmpStruct.second << endl;
 				queErrorFundamental.push(tmpForegroundOverlapErrorFundamental);
 			}
 		}
 
 		float tmpisBad = isBad, tmpisBadFundamental = isBadFundamental;
 		//isBad -= minisBad;
-		//cout << "minisBad=" << minisBad << " tmpisBad=" << tmpisBad << endl;
+
 		minisBad = min(minisBad, tmpisBad);
-		//Dong nay neu comment thi se chi la su dung Fund
+		//Comment if only using Fundamental matrix
 		minisBad = min(minisBad, isBadChooseHomo);
 
 
 
 		if (isCalculatingFundamental == true && isBadFundamental != 0){
 			//	isBadFundamental -= minisBadFundamental;
-			//	cout << "minisBadFundamental=" << minisBadFundamental << " tmpisBadFundamental=" << tmpisBadFundamental << endl;
 			minisBadFundamental = min(minisBadFundamental, tmpisBadFundamental);
 		}
-		//cout << "isCalculatingFundamental=" << isCalculatingFundamental<< " isBadFundamental=" << isBadFundamental << " isBad=" << isBad << endl;
+		
 		//if ((isCalculatingFundamental == false && isBad > 0) || (isCalculatingFundamental == true && isBadFundamental > 0 && isBad > 0))
-
-		//Chi su dung Homography
+		//Only use Homography
 		if (isCalculatingFundamental == false){
 			if (isBad > minisBad)
 			while (iCount-- > 0){
@@ -1040,9 +993,8 @@ void MultimodalVideoRegistrAlg::compareFundametalAndHomography(bool isCalculatin
 			else{
 				m_oBestChooseTransMat = m_oBestTransMat.clone();
 				m_oBestChooseTransMat_inv = m_oBestTransMat_inv.clone();
-				cout << "Thay doi" << endl;
+				
 				while (!queError.empty()){
-					//cout << queError.front() << endl;
 					pair<pair<Mat, Mat>, float> tmpStruct = m_queueFrames.front();
 					tmpStruct.second = queError.front();
 					m_queueFrames.push(tmpStruct);
@@ -1053,7 +1005,7 @@ void MultimodalVideoRegistrAlg::compareFundametalAndHomography(bool isCalculatin
 		}
 
 		cout << "minisBadFundamental=" << minisBadFundamental << " minisBad=" << minisBad << endl;
-		//Su dung Fundamental
+		//Use Fundamental
 		if (isCalculatingFundamental == true){
 			if (isBadFundamental > minisBadFundamental && isBad > minisBad)
 			while (iCount-- > 0){
@@ -1074,7 +1026,6 @@ void MultimodalVideoRegistrAlg::compareFundametalAndHomography(bool isCalculatin
 						bestTransTMatrix_Choose = bestTransTMatrix.clone();
 
 						while (!queErrorFundamental.empty()){
-							//cout << queError.front() << endl;
 							pair<pair<Mat, Mat>, float> tmpStruct = m_queueFrames.front();
 							tmpStruct.second = queErrorFundamental.front();
 							m_queueFrames.push(tmpStruct);
@@ -1106,41 +1057,6 @@ void MultimodalVideoRegistrAlg::compareFundametalAndHomography(bool isCalculatin
 					}
 				}
 
-
-				//if (isBadFundamental < isBad && isBadFundamental < 0 && minisBadFundamental < minisBad){
-
-				//	isUsingFundametalMatrix = true;
-
-				//	cout << "isUsingFundametalMatrix----------------------------------" << endl;
-
-				//	while (!queErrorFundamental.empty()){
-				//		//cout << queError.front() << endl;
-				//		pair<pair<Mat, Mat>, float> tmpStruct = m_queueFrames.front();
-				//		tmpStruct.second = queErrorFundamental.front();
-				//		m_queueFrames.push(tmpStruct);
-				//		m_queueFrames.pop();
-				//		queErrorFundamental.pop();
-				//	}
-				//}
-				//else
-				//if (isBad < 0)
-				//{
-				//	m_oBestChooseTransMat = m_oBestTransMat.clone();
-				//	m_oBestChooseTransMat_inv = m_oBestTransMat_inv.clone();
-
-				//	while (!queError.empty()){
-
-				//		if (isUsingFundametalMatrix == false){
-				//			pair<pair<Mat, Mat>, float> tmpStruct = m_queueFrames.front();
-				//			tmpStruct.second = queError.front();
-				//			m_queueFrames.push(tmpStruct);
-				//			m_queueFrames.pop();
-				//		}
-				//		queError.pop();
-				//	}
-				//	if (isUsingFundametalMatrix == false)
-				//		isUsingFundametalMatrix = false;
-				//}
 			}
 		}
 
@@ -1149,7 +1065,6 @@ void MultimodalVideoRegistrAlg::compareFundametalAndHomography(bool isCalculatin
 
 	}
 	else{
-		//cout << "5 cai dau" << endl;
 		m_oBestChooseTransMat = m_oBestTransMat.clone();
 		m_oBestChooseTransMat_inv = m_oBestTransMat_inv.clone();
 		isUsingFundametalMatrix = false;
