@@ -1,5 +1,5 @@
 # Note
-This repository contains a C/C++ code of paper "Non-planar Infrared-Visible Registration for Uncalibrated Stereo Pairs" [Paper](https://luannd.github.io/cvprw.html)
+This repository contains a C/C++ code of [Paper](https://luannd.github.io/cvprw.html) "Non-planar Infrared-Visible Registration for Uncalibrated Stereo Pairs" 
 
 ### Non-planar Infrared-Visible Registration for Uncalibrated Stereo Pairs
 
