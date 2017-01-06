@@ -1,3 +1,10 @@
+//--------------------------------------------------------
+// TIRVisReg
+// Copyright (c) 2015 
+// Licensed under The GNU License [see LICENSE for details]
+// Written by Dinh-Luan Nguyen
+// --------------------------------------------------------
+
 #include "MultimodalVideoRegistrAlg.h"
 #include "DatasetUtils.h"
 
