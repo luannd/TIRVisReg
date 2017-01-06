@@ -1,3 +1,12 @@
+//--------------------------------------------------------
+// TIRVisReg
+// Copyright (c) 2015 
+// Licensed under The GNU License [see LICENSE for details]
+// Written by Dinh-Luan Nguyen
+// --------------------------------------------------------
+
+
+
 //! dataset/application parameters
 #define LITIV2012_DATASET_PATH          "C:\\Yourpath\\"
 
