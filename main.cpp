@@ -1,6 +1,5 @@
 //! dataset/application parameters
-#define LITIV2012_DATASET_PATH          "D:\\0_Polytechnique_Montreal2015\\Dataset\\Luan_eval\\"
-//#define LITIV2012_DATASET_PATH          "C:\\CodePartage\\Luan\\litiv2012_dataset\\"
+#define LITIV2012_DATASET_PATH          "C:\\Yourpath\\"
 
 #define LITIV2012_TEST_SEQUENCE_ID      4 // [1..9]
 #include "LITIV2012Utils.h"             // automatically adds all other required LITIV dataset defines
@@ -154,21 +153,18 @@ int main() {
 			cv::cvtColor(oForegroundBGR_THERMAL, oForeground_THERMAL, COLOR_BGR2GRAY);
 			cv::cvtColor(oForegroundBGR_VISIBLE, oForeground_VISIBLE, COLOR_BGR2GRAY);
 
-			Size size(oForeground_THERMAL.cols/2, oForeground_THERMAL.rows/2);//de size mac dinh -> nhanh tg
+			Size size(oForeground_THERMAL.cols/2, oForeground_THERMAL.rows/2);
 			tmSize = size;
 			resize(oForeground_THERMAL, oForeground_THERMAL, size);//resize image
 			resize(oForeground_VISIBLE, oForeground_VISIBLE, size);//resize image
 
 			oAlg2.ProcessForeground(oForeground_THERMAL, oForeground_VISIBLE);
 
-
-
-			//them tmp
 			//break;
 		}
 		std::cout << endl;
 		//Mat luantmp = oAlg2.GetTransformationMatrix(false);
-		//Thu set matran nhan gia tri ban dau, thay vi ma tran don vi
+		
 		//oAlg.setTransMat(oAlg2);
 		oAlg2.iCountFrame = 0;
 		oAlg2.minisBad = oAlg2.minisBadFundamental = 100;
@@ -324,7 +320,7 @@ int main() {
 
 
 				//imshow("best", oTransformedSource / 2 + oForeground_VISIBLE / 2);
-				//Moi chinh
+				
 #endif //USE_FULL_DEBUG_DISPLAY				
 
 #if USE_FILESTORAGE_RES_OUTPUT
