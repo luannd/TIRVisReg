@@ -8,7 +8,6 @@ By Dinh-Luan Nguyen, Pierre-Luc St-Charles, Guillaume-Alexandre Bilodeau
 # Citing IRVisReg
 
 If you find IRVisReg useful in your research, please consider citing:
-If you find Faster R-CNN useful in your research, please consider citing:
 
     @inproceedings{Nguyen_2016_CVPR_Workshops,
         Author = {Nguyen, Dinh-Luan and St-Charles, Pierre-Luc and Bilodeau, Guillaume-Alexandre},
