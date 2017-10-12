@@ -19,4 +19,4 @@ If you find IRVisReg useful in your research, please consider citing:
 
 ### Requirements: software
 
-1. `OpenCV 3.0` 
+1. `OpenCV 3.0 version 3.0.0-rc1` 
