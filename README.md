@@ -3,7 +3,7 @@ This repository contains a C/C++ code of the CVPRW paper ["Non-planar Infrared-V
 
 ### Non-planar Infrared-Visible Registration for Uncalibrated Stereo Pairs
 
-By Dinh-Luan Nguyen, Pierre-Luc St-Charles, Guillaume-Alexandre Bilodeau
+By [Dinh-Luan Nguyen](https://scholar.google.com/citations?user=i6wx2AEAAAAJ&hl=en), [Pierre-Luc St-Charles](https://scholar.google.com/citations?user=30mr9vYAAAAJ&hl=en), [Guillaume-Alexandre Bilodeau](https://scholar.google.com/citations?user=OU5TZScAAAAJ&hl=en)
 
 # Citing IRVisReg
 
@@ -19,3 +19,5 @@ If you find IRVisReg useful in your research, please consider citing:
 
 ### Requirements:
  `OpenCV 3.0 version 3.0.0-rc1` 
+# Run code
+Run the main.cpp file to explore!
