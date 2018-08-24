@@ -6,11 +6,11 @@ By [Dinh-Luan Nguyen](https://scholar.google.com/citations?user=i6wx2AEAAAAJ&hl=
 
 <div align="middle">
     <img src="img/proposedFramework.jpg" width="900"/>
-<p>Figure1. Proposed framework</p>
+<p>Figure 1. Proposed framework</p>
 	<img src="img/segmentNoise.jpg" width="800"/>
-<p>Figure2. Segmentation and spurious blobs filtering strategy</p>
+<p>Figure 2. Segmentation and spurious blobs filtering strategy</p>
 	<img src="img/resultPlanar.png" width="800"/>
-<p>Figure3. Comparison results with state-of-the-art</p>
+<p>Figure 3. Comparison results with state-of-the-art</p>
 </div>
 
 
