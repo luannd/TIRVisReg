@@ -1,5 +1,5 @@
 # Note
-This repository contains a C/C++ code of [Paper](https://luannd.github.io/cvprw.html) "Non-planar Infrared-Visible Registration for Uncalibrated Stereo Pairs" 
+This repository contains a C/C++ code of the CVPRW paper ["Non-planar Infrared-Visible Registration for Uncalibrated Stereo Pairs"](http://openaccess.thecvf.com/content_cvpr_2016_workshops/w9/papers/Nguyen_Non-Planar_Infrared-Visible_Registration_CVPR_2016_paper.pdf)
 
 ### Non-planar Infrared-Visible Registration for Uncalibrated Stereo Pairs
 
@@ -17,6 +17,5 @@ If you find IRVisReg useful in your research, please consider citing:
         Year = {2016}
     }
 
-### Requirements: software
-
-1. `OpenCV 3.0 version 3.0.0-rc1` 
+### Requirements:
+ `OpenCV 3.0 version 3.0.0-rc1` 
